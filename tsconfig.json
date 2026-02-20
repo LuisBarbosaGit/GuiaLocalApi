@@ -1,0 +1,23 @@
+{
+  "$schema": "https://www.schemastore.org/tsconfig",
+  "_version": "22.0.0",
+  "extends": "@tsconfig/node22/tsconfig.json",
+
+  "compilerOptions": {
+    "lib": ["es2023"],
+    "baseUrl": ".",
+    "module": "nodenext",
+    "target": "es2022",
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node16",
+
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
