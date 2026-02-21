@@ -1,6 +1,6 @@
 import Fastify from 'fastify';
 import 'dotenv/config';
-import establishmentsRouter from './routes/establishments';
+import establishmentsRouter from './http/routes/establishments';
 
 const app = Fastify({
   logger: true,
