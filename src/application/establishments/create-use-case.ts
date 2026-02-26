@@ -1,4 +1,6 @@
-import { establishmentRepositorySchema, establishmentsSchema } from "@/domain/establishments/type";
+import { establishmentsSchema } from '@/domain/establishments/type';
+import { establishmentRepositorySchema } from '@/infra/repositories/supabase/establishments-repository';
+
 
 export class createEstablishmentUseCase {
   constructor(private repository: establishmentRepositorySchema) {}
@@ -9,19 +11,19 @@ export class createEstablishmentUseCase {
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
     if (!establishment) {
-      throw new Error("Required fields are missing");
+      throw new Error('Required fields are missing');
     }
 
     const { name, description, category_id } = establishment;
 
     if (!name || !category_id || !description) {
-      throw new Error("Required fields are missing");
+      throw new Error('Required fields are missing');
     }
 
     const isValidUuid = uuidRegex.test(category_id);
 
     if (!isValidUuid) {
-      throw new Error("Required fields are missing");
+      throw new Error('Required fields are missing');
     }
 
     try {
