@@ -1,18 +1,23 @@
-import { establishmentsSchema } from '@/domain/establishments/type';
-import { establishmentRepositorySchema } from '@/infra/repositories/supabase/establishments-repository';
-
+import { establishmentsType } from '../../domain/establishments/schemas.js';
+import { establishmentRepositorySchema } from '../../infra/repositories/supabase/establishments-repository.js';
+import { AppError } from '../../shared/errors/AppError.js';
+import { ErrorsType } from '../../utils/errorsType.js';
 
 export class EditEstablishmentsByIdUseCase {
   constructor(private repository: establishmentRepositorySchema) {}
 
-  async execute(item: establishmentsSchema) {
+  async execute(id: string, item: establishmentsType) {
     //To do: Add token and pagination
     try {
-      const response = await this.repository.editById(item);
+      const response = await this.repository.editById(id, item);
 
       return response;
     } catch (error: any) {
-      throw new Error(error.message);
+      throw new AppError({
+        code: 500,
+        status: ErrorsType.INTERNAL_SERVER_ERROR,
+        details: error.message,
+      });
     }
   }
 }

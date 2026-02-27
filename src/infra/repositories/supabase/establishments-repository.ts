@@ -1,19 +1,22 @@
 import {
-  establishmentsSchema,
-} from '@/domain/establishments/type';
-import db from '../../../lib/supabase';
+  establishmentsType,
+  updateEstablishmentsDTO,
+} from '../../../domain/establishments/schemas.js';
+import db from '../../../lib/supabase.js';
+import { AppError } from '../../../shared/errors/AppError.js';
+import { ErrorsType } from '../../../utils/errorsType.js';
 
 export interface establishmentRepositorySchema {
-  create(data: establishmentsSchema): Promise<establishmentsSchema>;
-  listAll(): Promise<establishmentsSchema[]>;
-  getById(id: string): Promise<establishmentsSchema>;
-  editById(item: establishmentsSchema): Promise<establishmentsSchema>;
+  create(data: establishmentsType): Promise<establishmentsType>;
+  listAll(): Promise<establishmentsType[]>;
+  getById(id: string): Promise<establishmentsType>;
+  editById(id: string, item: establishmentsType): Promise<establishmentsType>;
   delete(id: string): Promise<null>;
-  getByCategory(categoryId: string): Promise<establishmentsSchema[]>;
+  getByCategory(categoryId: string): Promise<establishmentsType[]>;
 }
 
 export class establishmentRepository implements establishmentRepositorySchema {
-  async create(item: establishmentsSchema): Promise<establishmentsSchema> {
+  async create(item: establishmentsType): Promise<establishmentsType> {
     const { data, error } = await db
       .from('establishments')
       .insert(item)
@@ -21,26 +24,34 @@ export class establishmentRepository implements establishmentRepositorySchema {
       .single();
 
     if (error) {
-      throw new Error(error.message);
+      throw new AppError({
+        code: 500,
+        status: ErrorsType.INTERNAL_SERVER_ERROR,
+        details: error.message,
+      });
     }
 
     return data;
   }
 
-  async listAll(): Promise<establishmentsSchema[]> {
+  async listAll(): Promise<establishmentsType[]> {
     const { data, error } = await db
       .from('establishments')
       .select()
       .order('created_at');
 
     if (error) {
-      throw new Error(error.message);
+      throw new AppError({
+        code: 500,
+        status: ErrorsType.INTERNAL_SERVER_ERROR,
+        details: error.message,
+      });
     }
 
     return data;
   }
 
-  async getById(id: string): Promise<establishmentsSchema> {
+  async getById(id: string): Promise<establishmentsType> {
     const { data, error } = await db
       .from('establishments')
       .select('*')
@@ -48,22 +59,38 @@ export class establishmentRepository implements establishmentRepositorySchema {
       .single();
 
     if (error) {
-      throw new Error(error.message);
+      throw new AppError({
+        code: 500,
+        status: ErrorsType.INTERNAL_SERVER_ERROR,
+        details: error.message,
+      });
     }
 
     return data;
   }
 
-  async editById(item: establishmentsSchema): Promise<establishmentsSchema> {
+  async editById(
+    id: string,
+    item: updateEstablishmentsDTO,
+  ): Promise<establishmentsType> {
     const { data, error } = await db
       .from('establishments')
-      .update(item)
-      .eq('id', item.id)
+      .update({
+        name: item.name,
+        description: item.description,
+        adress: item.adress,
+        category_id: item.category_id,
+      })
+      .eq('id', id)
       .select('*')
       .single();
 
     if (error) {
-      throw new Error(error.message);
+      throw new AppError({
+        code: 500,
+        status: ErrorsType.INTERNAL_SERVER_ERROR,
+        details: error.message,
+      });
     }
 
     return data;
@@ -76,20 +103,28 @@ export class establishmentRepository implements establishmentRepositorySchema {
       .eq('id', id);
 
     if (error) {
-      throw new Error(error.message);
+      throw new AppError({
+        code: 500,
+        status: ErrorsType.INTERNAL_SERVER_ERROR,
+        details: error.message,
+      });
     }
 
     return data;
   }
 
-  async getByCategory(categoryId: string): Promise<establishmentsSchema[]> {
+  async getByCategory(categoryId: string): Promise<establishmentsType[]> {
     const { data, error } = await db
       .from('establishments')
       .select('*')
       .eq('category_id', categoryId);
 
     if (error) {
-      throw new Error(error.message);
+      throw new AppError({
+        code: 500,
+        status: ErrorsType.INTERNAL_SERVER_ERROR,
+        details: error.message,
+      });
     }
 
     return data;

@@ -1,17 +1,30 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { establishmentsSchema } from '@/domain/establishments/type';
-import { createEstablishmentFactory } from '@/infra/factories/establishments/create-establishments-factory';
-import { getAllEstablishmentsFactory } from '../../infra/factories/establishments/getAll-establishments-factory';
-import { getByIdEstablishmentByIdFactory } from '@/infra/factories/establishments/get-by-id-establishments-use-case';
-import { getByCategoryEstablishmentFactory } from '@/infra/factories/establishments/get-by-category-factory';
-import { deleteEstablishmentFactory } from '@/infra/factories/establishments/delete-establishments-factory';
-import { editEstablishmentFactory } from '@/infra/factories/establishments/edit-establishments-factory';
+
+import { createEstablishmentFactory } from '../../infra/factories/establishments/create-establishments-factory.js';
+import { getAllEstablishmentsFactory } from '../../infra/factories/establishments/getAll-establishments-factory.js';
+import { getByIdEstablishmentByIdFactory } from '../../infra/factories/establishments/get-by-id-establishments-use-case.js';
+import { getByCategoryEstablishmentFactory } from '../../infra/factories/establishments/get-by-category-factory.js';
+import { deleteEstablishmentFactory } from '../../infra/factories/establishments/delete-establishments-factory.js';
+import { editEstablishmentFactory } from '../../infra/factories/establishments/edit-establishments-factory.js';
+import {
+  createEstablishmentSchema,
+  establishmentsType,
+} from '../../domain/establishments/schemas.js';
+import { updateEstablishmentsSchema } from '../../domain/establishments/schemas.js';
+
+import z from 'zod';
+import { ZodTypeProvider } from 'fastify-type-provider-zod';
 
 const establishmentsRouter = (app: FastifyInstance) => {
-  app.post(
+  app.withTypeProvider<ZodTypeProvider>().post(
     '/establishments',
+    {
+      schema: {
+        body: createEstablishmentSchema,
+      },
+    },
     async (
-      request: FastifyRequest<{ Body: establishmentsSchema }>,
+      request: FastifyRequest<{ Body: establishmentsType }>,
       reply: FastifyReply,
     ) => {
       const useCase = createEstablishmentFactory();
@@ -34,10 +47,17 @@ const establishmentsRouter = (app: FastifyInstance) => {
     });
   });
 
-  app.get(
+  app.withTypeProvider<ZodTypeProvider>().get(
     '/establishments/:id',
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      const id = request.id;
+    {
+      schema: {
+        params: z.object({
+          id: z.uuid(),
+        }),
+      },
+    },
+    async (request, reply) => {
+      const { id } = request.params;
       const useCase = getByIdEstablishmentByIdFactory();
       const data = await useCase.execute(id);
 
@@ -48,13 +68,20 @@ const establishmentsRouter = (app: FastifyInstance) => {
     },
   );
 
-  app.get(
-    'establishments/categories/:id',
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      const categoryId = request.id;
+  app.withTypeProvider<ZodTypeProvider>().get(
+    '/establishments/categories/:id',
+    {
+      schema: {
+        params: z.object({
+          id: z.uuid(),
+        }),
+      },
+    },
+    async (request, reply) => {
+      const { id } = request.params;
       const useCase = getByCategoryEstablishmentFactory();
 
-      const data = await useCase.execute(categoryId);
+      const data = await useCase.execute(id);
 
       reply.code(200).send({
         message: 'sucess',
@@ -63,10 +90,17 @@ const establishmentsRouter = (app: FastifyInstance) => {
     },
   );
 
-  app.delete(
-    'establishments/:id',
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      const id = request.id;
+  app.withTypeProvider<ZodTypeProvider>().delete(
+    '/establishments/:id',
+    {
+      schema: {
+        params: z.object({
+          id: z.uuid(),
+        }),
+      },
+    },
+    async (request, reply) => {
+      const { id } = request.params;
       const useCase = deleteEstablishmentFactory();
 
       const data = await useCase.execute(id);
@@ -78,14 +112,23 @@ const establishmentsRouter = (app: FastifyInstance) => {
     },
   );
 
-  app.put(
-    'establishments/:id',
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      const item = request.body as establishmentsSchema;
+  app.withTypeProvider<ZodTypeProvider>().put(
+    '/establishments/:id',
+    {
+      schema: {
+        params: z.object({
+          id: z.uuid(),
+        }),
+        body: updateEstablishmentsSchema,
+      },
+    },
+    async (request, reply) => {
+      const { id } = request.params;
+      const item = request.body as establishmentsType;
 
       const useCase = editEstablishmentFactory();
 
-      const data = useCase.execute(item);
+      const data = await useCase.execute(id, item);
 
       reply.code(200).send({
         message: 'sucess',

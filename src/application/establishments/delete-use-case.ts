@@ -1,5 +1,6 @@
-import { establishmentRepositorySchema } from "@/infra/repositories/supabase/establishments-repository";
-
+import { establishmentRepositorySchema } from '../../infra/repositories/supabase/establishments-repository.js';
+import { AppError } from '../../shared/errors/AppError.js';
+import { ErrorsType } from '../../utils/errorsType.js';
 
 export class deleteEstablishmentsUseCase {
   constructor(private repository: establishmentRepositorySchema) {}
@@ -11,7 +12,11 @@ export class deleteEstablishmentsUseCase {
 
       return response;
     } catch (error: any) {
-      throw new Error(error.message);
+      throw new AppError({
+        code: 500,
+        status: ErrorsType.INTERNAL_SERVER_ERROR,
+        details: error.message,
+      });
     }
   }
 }

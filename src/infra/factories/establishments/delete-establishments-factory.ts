@@ -1,5 +1,5 @@
-import { deleteEstablishmentsUseCase } from '@/application/establishments/delete-use-case';
-import { establishmentRepository } from '@/infra/repositories/supabase/establishments-repository';
+import { deleteEstablishmentsUseCase } from '../../../application/establishments/delete-use-case.js';
+import { establishmentRepository } from '../../../infra/repositories/supabase/establishments-repository.js';
 
 
 export function deleteEstablishmentFactory() {

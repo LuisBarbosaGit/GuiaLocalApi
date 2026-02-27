@@ -1,5 +1,6 @@
-import { createEstablishmentUseCase } from '@/application/establishments/create-use-case';
-import { establishmentRepository } from '@/infra/repositories/supabase/establishments-repository';
+
+import { createEstablishmentUseCase } from '../../../application/establishments/create-use-case.js';
+import { establishmentRepository } from '../../..//infra/repositories/supabase/establishments-repository.js';
 
 
 export function createEstablishmentFactory() {
