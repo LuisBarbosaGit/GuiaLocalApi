@@ -1,11 +1,17 @@
 import Fastify, { FastifyError } from 'fastify';
 import 'dotenv/config';
-import establishmentsRouter from './http/routes/establishments.js';
 import { AppError } from './shared/errors/AppError.js';
 import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
+import {
+  establishmentsRouter,
+  categoriesRouter,
+} from './http/routes/routes.js';
+
+import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
 
 const app = Fastify({
   logger: true,
@@ -13,7 +19,21 @@ const app = Fastify({
 
 const start = async () => {
   try {
-    await app.listen({ port: 3000, host: '192.168.15.7' });
+    await app.register(swagger, {
+      openapi: {
+        info: {
+          title: 'API de Estabelecimentos',
+          description:
+            'API para gerenciamento de estabelecimentos e categorias',
+          version: '1.0.0',
+        },
+      },
+    });
+
+    await app.register(swaggerUi, {
+      routePrefix: '/docs',
+    });
+    await app.listen({ port: 3000 });
     console.log('server is Running');
   } catch (error) {
     app.log.error(error);
@@ -23,6 +43,7 @@ const start = async () => {
 start();
 
 app.register(establishmentsRouter);
+app.register(categoriesRouter);
 
 app.setErrorHandler((error: FastifyError | AppError, request, reply) => {
   if (error instanceof AppError) {

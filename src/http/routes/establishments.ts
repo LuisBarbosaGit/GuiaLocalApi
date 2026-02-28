@@ -8,44 +8,50 @@ import { deleteEstablishmentFactory } from '../../infra/factories/establishments
 import { editEstablishmentFactory } from '../../infra/factories/establishments/edit-establishments-factory.js';
 import {
   createEstablishmentSchema,
+  createEstablishmentSchemaResponse,
   establishmentsType,
-} from '../../domain/establishments/schemas.js';
-import { updateEstablishmentsSchema } from '../../domain/establishments/schemas.js';
+} from '../../domain/repositories/establishments.js';
+import { updateEstablishmentsSchema } from '../../domain/repositories/establishments.js';
 
 import z from 'zod';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 
-const establishmentsRouter = (app: FastifyInstance) => {
+export const establishmentsRouter = (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(
     '/establishments',
     {
       schema: {
         body: createEstablishmentSchema,
+        response: {
+          201: createEstablishmentSchemaResponse,
+        },
       },
     },
-    async (
-      request: FastifyRequest<{ Body: establishmentsType }>,
-      reply: FastifyReply,
-    ) => {
+    async (request, reply) => {
+      const item = request.body;
       const useCase = createEstablishmentFactory();
-      const data = await useCase.execute(request.body);
+      const data = await useCase.execute(item);
 
-      reply.code(201).send({
-        message: 'sucess',
-        data: data,
-      });
+      reply.code(201).send(data);
     },
   );
 
-  app.get('/establishments', async (_, reply: FastifyReply) => {
-    const useCase = getAllEstablishmentsFactory();
-    const data = await useCase.execute();
+  app.withTypeProvider<ZodTypeProvider>().get(
+    '/establishments',
+    {
+      schema: {
+        response: {
+          200: z.array(createEstablishmentSchema),
+        },
+      },
+    },
+    async (_, reply: FastifyReply) => {
+      const useCase = getAllEstablishmentsFactory();
+      const data = await useCase.execute();
 
-    reply.code(201).send({
-      message: 'sucess',
-      data: data,
-    });
-  });
+      reply.code(200).send(data);
+    },
+  );
 
   app.withTypeProvider<ZodTypeProvider>().get(
     '/establishments/:id',
@@ -61,10 +67,7 @@ const establishmentsRouter = (app: FastifyInstance) => {
       const useCase = getByIdEstablishmentByIdFactory();
       const data = await useCase.execute(id);
 
-      reply.code(200).send({
-        message: 'sucess',
-        data: data,
-      });
+      reply.code(200).send(data);
     },
   );
 
@@ -83,10 +86,7 @@ const establishmentsRouter = (app: FastifyInstance) => {
 
       const data = await useCase.execute(id);
 
-      reply.code(200).send({
-        message: 'sucess',
-        data: data,
-      });
+      reply.code(200).send(data);
     },
   );
 
@@ -105,10 +105,7 @@ const establishmentsRouter = (app: FastifyInstance) => {
 
       const data = await useCase.execute(id);
 
-      reply.code(200).send({
-        message: 'sucess',
-        data: data,
-      });
+      reply.code(200).send(data);
     },
   );
 
@@ -130,12 +127,7 @@ const establishmentsRouter = (app: FastifyInstance) => {
 
       const data = await useCase.execute(id, item);
 
-      reply.code(200).send({
-        message: 'sucess',
-        data: data,
-      });
+      reply.code(200).send(data);
     },
   );
 };
-
-export default establishmentsRouter;

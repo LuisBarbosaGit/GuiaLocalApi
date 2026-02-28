@@ -1,7 +1,7 @@
 import {
   establishmentsType,
   updateEstablishmentsDTO,
-} from '../../../domain/establishments/schemas.js';
+} from '../../../domain/repositories/establishments.js';
 import db from '../../../lib/supabase.js';
 import { AppError } from '../../../shared/errors/AppError.js';
 import { ErrorsType } from '../../../utils/errorsType.js';
@@ -80,6 +80,8 @@ export class establishmentRepository implements establishmentRepositorySchema {
         description: item.description,
         adress: item.adress,
         category_id: item.category_id,
+        city : item.city,
+        state: item.state,
       })
       .eq('id', id)
       .select('*')

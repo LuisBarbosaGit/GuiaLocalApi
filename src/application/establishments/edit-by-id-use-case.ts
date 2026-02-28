@@ -1,4 +1,4 @@
-import { establishmentsType } from '../../domain/establishments/schemas.js';
+import { establishmentsType } from '../../domain/repositories/establishments.js';
 import { establishmentRepositorySchema } from '../../infra/repositories/supabase/establishments-repository.js';
 import { AppError } from '../../shared/errors/AppError.js';
 import { ErrorsType } from '../../utils/errorsType.js';
