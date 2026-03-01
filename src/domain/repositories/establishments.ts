@@ -21,7 +21,7 @@ export const createEstablishmentSchema = z.object({
 
 export type createEstablishmentsDTO = z.infer<typeof createEstablishmentSchema>;
 
-export const createEstablishmentSchemaResponse = z.object({
+export const establishmentSchemaResponse = z.object({
   id: z.uuid().optional(),
   name: z.string().min(1),
   description: z.string().min(5),

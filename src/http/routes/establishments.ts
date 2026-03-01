@@ -8,7 +8,7 @@ import { deleteEstablishmentFactory } from '../../infra/factories/establishments
 import { editEstablishmentFactory } from '../../infra/factories/establishments/edit-establishments-factory.js';
 import {
   createEstablishmentSchema,
-  createEstablishmentSchemaResponse,
+  establishmentSchemaResponse,
   establishmentsType,
 } from '../../domain/repositories/establishments.js';
 import { updateEstablishmentsSchema } from '../../domain/repositories/establishments.js';
@@ -23,7 +23,7 @@ export const establishmentsRouter = (app: FastifyInstance) => {
       schema: {
         body: createEstablishmentSchema,
         response: {
-          201: createEstablishmentSchemaResponse,
+          201: establishmentSchemaResponse,
         },
       },
     },
@@ -41,7 +41,7 @@ export const establishmentsRouter = (app: FastifyInstance) => {
     {
       schema: {
         response: {
-          200: z.array(createEstablishmentSchemaResponse),
+          200: z.array(establishmentSchemaResponse),
         },
       },
     },
