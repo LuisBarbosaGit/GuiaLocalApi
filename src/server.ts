@@ -33,7 +33,7 @@ const start = async () => {
     await app.register(swaggerUi, {
       routePrefix: '/docs',
     });
-    await app.listen({ port: 3000 });
+    await app.listen({ port: 3000, host: '0.0.0.0' });
     console.log('server is Running');
   } catch (error) {
     app.log.error(error);

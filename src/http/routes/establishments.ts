@@ -41,7 +41,7 @@ export const establishmentsRouter = (app: FastifyInstance) => {
     {
       schema: {
         response: {
-          200: z.array(createEstablishmentSchema),
+          200: z.array(createEstablishmentSchemaResponse),
         },
       },
     },
