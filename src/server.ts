@@ -8,6 +8,7 @@ import {
 import {
   establishmentsRouter,
   categoriesRouter,
+  reviewsRouter,
 } from './http/routes/routes.js';
 
 import swagger from '@fastify/swagger';
@@ -44,6 +45,7 @@ start();
 
 app.register(establishmentsRouter);
 app.register(categoriesRouter);
+app.register(reviewsRouter);
 
 app.setErrorHandler((error: FastifyError | AppError, request, reply) => {
   if (error instanceof AppError) {
