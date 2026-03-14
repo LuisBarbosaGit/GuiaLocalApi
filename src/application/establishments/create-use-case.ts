@@ -8,34 +8,12 @@ export class createEstablishmentUseCase {
 
   async execute(data: establishmentsType) {
     const establishment = data;
-    const uuidRegex =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
     if (!establishment) {
       throw new AppError({
         code: 400,
         status: ErrorsType.VALIDATION_ERROR,
         details: 'Data is missing',
-      });
-    }
-
-    const { name, description, category_id } = establishment;
-
-    if (!name || !category_id || !description) {
-      throw new AppError({
-        code: 400,
-        status: ErrorsType.VALIDATION_ERROR,
-        details: 'Required fields are missing',
-      });
-    }
-
-    const isValidUuid = uuidRegex.test(category_id);
-
-    if (!isValidUuid) {
-      throw new AppError({
-        code: 400,
-        status: ErrorsType.VALIDATION_ERROR,
-        details: 'Invalid UUID format for category_id',
       });
     }
 

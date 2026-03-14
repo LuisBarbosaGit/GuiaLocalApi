@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 
 import { createEstablishmentFactory } from '../../infra/factories/establishments/create-establishments-factory.js';
 import { getAllEstablishmentsFactory } from '../../infra/factories/establishments/getAll-establishments-factory.js';
-import { getByIdEstablishmentByIdFactory } from '../../infra/factories/establishments/get-by-id-establishments-use-case.js';
+import { getByIdEstablishmentFactory } from '../../infra/factories/establishments/get-by-id-establishments-use-case.js';
 import { getByCategoryEstablishmentFactory } from '../../infra/factories/establishments/get-by-category-factory.js';
 import { deleteEstablishmentFactory } from '../../infra/factories/establishments/delete-establishments-factory.js';
 import { editEstablishmentFactory } from '../../infra/factories/establishments/edit-establishments-factory.js';
@@ -64,7 +64,7 @@ export const establishmentsRouter = (app: FastifyInstance) => {
     },
     async (request, reply) => {
       const { id } = request.params;
-      const useCase = getByIdEstablishmentByIdFactory();
+      const useCase = getByIdEstablishmentFactory();
       const data = await useCase.execute(id);
 
       reply.code(200).send(data);
