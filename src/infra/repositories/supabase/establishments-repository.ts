@@ -1,22 +1,20 @@
-import {
-  establishmentsType,
-  updateEstablishmentsDTO,
-} from '../../../domain/repositories/establishments.js';
+import { establishmentsDto } from '../../../domain/entities/establishments-entity.js';
+import { updateEstablishmentsDTO } from '../../../domain/repositories/establishments.js';
 import db from '../../../lib/supabase.js';
 import { AppError } from '../../../shared/errors/AppError.js';
 import { ErrorsType } from '../../../utils/errorsType.js';
 
 export interface establishmentRepositorySchema {
-  create(data: establishmentsType): Promise<establishmentsType>;
-  listAll(): Promise<establishmentsType[]>;
-  getById(id: string): Promise<establishmentsType>;
-  editById(id: string, item: establishmentsType): Promise<establishmentsType>;
+  create(data: establishmentsDto): Promise<establishmentsDto>;
+  listAll(): Promise<establishmentsDto[]>;
+  getById(id: string): Promise<establishmentsDto>;
+  editById(id: string, item: establishmentsDto): Promise<establishmentsDto>;
   delete(id: string): Promise<null>;
-  getByCategory(categoryId: string): Promise<establishmentsType[]>;
+  getByCategory(categoryId: string): Promise<establishmentsDto[]>;
 }
 
 export class establishmentRepository implements establishmentRepositorySchema {
-  async create(item: establishmentsType): Promise<establishmentsType> {
+  async create(item: establishmentsDto): Promise<establishmentsDto> {
     const { data, error } = await db
       .from('establishments')
       .insert(item)
@@ -34,7 +32,7 @@ export class establishmentRepository implements establishmentRepositorySchema {
     return data;
   }
 
-  async listAll(): Promise<establishmentsType[]> {
+  async listAll(): Promise<establishmentsDto[]> {
     const { data, error } = await db
       .from('establishments')
       .select()
@@ -51,7 +49,7 @@ export class establishmentRepository implements establishmentRepositorySchema {
     return data;
   }
 
-  async getById(id: string): Promise<establishmentsType> {
+  async getById(id: string): Promise<establishmentsDto> {
     const { data, error } = await db
       .from('establishments')
       .select('*')
@@ -72,7 +70,7 @@ export class establishmentRepository implements establishmentRepositorySchema {
   async editById(
     id: string,
     item: updateEstablishmentsDTO,
-  ): Promise<establishmentsType> {
+  ): Promise<establishmentsDto> {
     const { data, error } = await db
       .from('establishments')
       .update({
@@ -80,7 +78,7 @@ export class establishmentRepository implements establishmentRepositorySchema {
         description: item.description,
         adress: item.adress,
         category_id: item.category_id,
-        city : item.city,
+        city: item.city,
         state: item.state,
       })
       .eq('id', id)
@@ -115,7 +113,7 @@ export class establishmentRepository implements establishmentRepositorySchema {
     return data;
   }
 
-  async getByCategory(categoryId: string): Promise<establishmentsType[]> {
+  async getByCategory(categoryId: string): Promise<establishmentsDto[]> {
     const { data, error } = await db
       .from('establishments')
       .select('*')

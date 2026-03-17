@@ -1,4 +1,5 @@
-import { establishmentsType } from '../../domain/repositories/establishments.js';
+
+import { establishmentsDto } from '../../domain/entities/establishments-entity.js';
 import { establishmentRepositorySchema } from '../../infra/repositories/supabase/establishments-repository.js';
 import { AppError } from '../../shared/errors/AppError.js';
 import { ErrorsType } from '../../utils/errorsType.js';
@@ -6,7 +7,7 @@ import { ErrorsType } from '../../utils/errorsType.js';
 export class createEstablishmentUseCase {
   constructor(private repository: establishmentRepositorySchema) {}
 
-  async execute(data: establishmentsType) {
+  async execute(data: establishmentsDto) {
     const establishment = data;
 
     if (!establishment) {

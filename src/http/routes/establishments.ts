@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyInstance, FastifyReply } from 'fastify';
 
 import { createEstablishmentFactory } from '../../infra/factories/establishments/create-establishments-factory.js';
 import { getAllEstablishmentsFactory } from '../../infra/factories/establishments/getAll-establishments-factory.js';
@@ -9,12 +9,12 @@ import { editEstablishmentFactory } from '../../infra/factories/establishments/e
 import {
   createEstablishmentSchema,
   establishmentSchemaResponse,
-  establishmentsType,
 } from '../../domain/repositories/establishments.js';
 import { updateEstablishmentsSchema } from '../../domain/repositories/establishments.js';
 
 import z from 'zod';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
+import { establishmentsDto } from '../../domain/entities/establishments-entity.js';
 
 export const establishmentsRouter = (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(
@@ -121,7 +121,7 @@ export const establishmentsRouter = (app: FastifyInstance) => {
     },
     async (request, reply) => {
       const { id } = request.params;
-      const item = request.body as establishmentsType;
+      const item = request.body as establishmentsDto;
 
       const useCase = editEstablishmentFactory();
 
